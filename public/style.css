@@ -1,0 +1,13 @@
+.wrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+li {
+  list-style: none;
+  border: grey solid .02em;
+  margin: 1em;
+  text-align: center;
+  width: 10em;
+  height: 20em;
+}
