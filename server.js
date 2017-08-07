@@ -17,18 +17,24 @@ app.get("/", (request, response) => {
   })
 })
 
-app.get("/userinfo/:username", (request, response) => {
+app.get("/userinfo/:id", (request, response) => {
   // request.params.username
-  const profileData = {
-    username: request.params.username
-  }
-  function username(user) {
-    return user.username === profileData.username
-  }
-
-  const userData = data.users.find(username)
-  response.render("userinfo", userData)
+  const id = request.params.id
+  database.one("SELECT * FROM robots WHERE id = $1", [id]).then(robodata => {
+    response.render("userinfo", robodata)
+  })
 })
+
+//   const profileData = {
+//     username: request.params.username
+//   }
+//   function username(user) {
+//     return user.username === profileData.username
+//   }
+//
+//   const userData = data.users.find(username)
+//   response.render("userinfo", userData)
+// })
 
 app.listen(3000, () => {
   console.log("Listening on port 3000")
