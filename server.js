@@ -1,8 +1,9 @@
 const express = require("express")
 const mustacheExpress = require("mustache-express")
 const data = require("./data")
-
+const pgPromise = require("pg-promise")()
 const app = express()
+const database = pgPromise({ database: "robot-database" })
 
 app.use(express.static("public"))
 
@@ -11,7 +12,9 @@ app.set("views", "./templates")
 app.set("view engine", "mustache")
 
 app.get("/", (request, response) => {
-  response.render("home", data)
+  database.any('SELECT * FROM "robots" ').then(robodata => {
+    response.render("home", { users: robodata })
+  })
 })
 
 app.get("/userinfo/:username", (request, response) => {
