@@ -4,6 +4,7 @@ const data = require("./data")
 const pgPromise = require("pg-promise")()
 const app = express()
 const database = pgPromise({ database: "robot-database" })
+const bodyParser = require("body-parser")
 
 app.use(express.static("public"))
 
@@ -30,6 +31,24 @@ app.get("/userinfo/:id", (request, response) => {
     .catch(robodata => {
       response.render("error", robodata)
     })
+})
+
+app.post("/error", (request, response) => {
+  const insertRobot = {
+    username: request.body.username,
+    email: request.body.email,
+    university: request.body.university,
+    job: request.body.job
+  }
+  database
+    .one(
+      `INSERT INTO "robots" (username, email, university, job) VALUES ($ (username), $(email), $(university), $(job)) RETURNING id`,
+      insertRobot
+    )
+    .then(insertRobotId => {
+      robot_id: insertRobotId.id
+    })
+  response.redirect("/")
 })
 
 //   const profileData = {
