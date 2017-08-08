@@ -20,9 +20,16 @@ app.get("/", (request, response) => {
 app.get("/userinfo/:id", (request, response) => {
   // request.params.username
   const id = request.params.id
-  database.one("SELECT * FROM robots WHERE id = $1", [id]).then(robodata => {
-    response.render("userinfo", robodata)
-  })
+  database
+    .one("SELECT * FROM robots WHERE id = $1", [id])
+    //{  id: id})
+
+    .then(robodata => {
+      response.render("userinfo", robodata)
+    })
+    .catch(robodata => {
+      response.render("error", robodata)
+    })
 })
 
 //   const profileData = {
