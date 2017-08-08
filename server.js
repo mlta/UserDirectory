@@ -7,7 +7,7 @@ const database = pgPromise({ database: "robot-database" })
 const bodyParser = require("body-parser")
 
 app.use(express.static("public"))
-
+app.use(bodyParser.urlencoded({ extended: false }))
 app.engine("mustache", mustacheExpress())
 app.set("views", "./templates")
 app.set("view engine", "mustache")
@@ -28,25 +28,30 @@ app.get("/userinfo/:id", (request, response) => {
     .then(robodata => {
       response.render("userinfo", robodata)
     })
-    .catch(robodata => {
-      response.render("error", robodata)
-    })
 })
 
-app.post("/error", (request, response) => {
+app.get("/add", (request, response) => {
+  response.render("addRobot")
+})
+
+app.post("/addId", (request, response) => {
   const insertRobot = {
     username: request.body.username,
     email: request.body.email,
     university: request.body.university,
     job: request.body.job
   }
+  console.log(insertRobot)
   database
     .one(
-      `INSERT INTO "robots" (username, email, university, job) VALUES ($ (username), $(email), $(university), $(job)) RETURNING id`,
+      `INSERT INTO "robots" (username, email, university, job) VALUES ($(username), $(email), $(university), $(job)) RETURNING id`,
       insertRobot
     )
     .then(insertRobotId => {
       robot_id: insertRobotId.id
+    })
+    .catch(error => {
+      console.log(error)
     })
   response.redirect("/")
 })
