@@ -50,8 +50,8 @@ app.post("/addId", (request, response) => {
       university: request.body.university,
       job: request.body.job
     }
-    console
-      .log(insertRobot)
+    console.log(insertRobot)
+    database
       .one(
         `INSERT INTO "robots" (username, email, university, job) VALUES ($(username), $(email), $(university), $(job)) RETURNING id`,
         insertRobot
